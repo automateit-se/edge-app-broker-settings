@@ -191,4 +191,5 @@ end
 
 function onExit() end
 
-return M
+-- iotopen-rt treats anything the app's code returns as an error, so the functions are only handed out to the tests
+if BROKER_SETTINGS_TEST then return M end

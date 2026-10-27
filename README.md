@@ -72,8 +72,8 @@ Edge apps run as root on the edge client. This app keeps what it does as root sm
 ## Development
 
 `app.lua` is the whole app, `app.json` its settings and `edge-app.json` its description in App Management. It runs
-in the edge client's Lua runtime (`iotopen-rt`, Lua 5.3). `app.lua` returns its pure functions so that they can be
-tested.
+in the edge client's Lua runtime (`iotopen-rt`, Lua 5.3). The runtime reports anything the code returns as an
+error, so `app.lua` only returns its pure functions to the tests (`BROKER_SETTINGS_TEST`).
 
 ```bash
 lua5.3 tests/test_app.lua
