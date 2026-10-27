@@ -1,0 +1,14 @@
+{
+  "author": "AutomateIT",
+  "license": "MIT",
+  "input": {
+    "max_queued_messages": { "type": "number", "name": "Max antal köade meddelanden", "description": "Hur många meddelanden bryggan till IoT Open sparar medan internet är nere. Bara meddelanden med QoS 1 eller 2 köas, om inte inställningen nedan är på. När kön är full slängs nya meddelanden. Mosquittos standard: 1000.", "default": 1000, "min": 0, "max": 10000000, "required": true },
+    "max_queued_mb": { "type": "number", "name": "Max storlek på kön (MB)", "description": "Övre gräns för köns storlek i minnet. 0 = ingen gräns (Mosquittos standard). Ett meddelande är oftast 100-300 byte, så 100 000 meddelanden ryms på ungefär 30 MB.", "default": 0, "min": 0, "max": 4096, "required": true },
+    "queue_qos0_messages": { "type": "toggle", "name": "Köa även QoS 0", "description": "På: även meddelanden som skickas med QoS 0 köas till bryggan. Behövs om appar som publicerar med QoS 0 inte ska tappa värden under ett avbrott. Mosquittos standard: av.", "default": false },
+    "autosave_interval": { "type": "number", "name": "Spara kön till disk (sekunder)", "description": "Hur ofta Mosquitto skriver kön och andra sparade data till disk, så att de överlever ett strömavbrott. Kortare tid skriver oftare till SD-kortet. Mosquittos standard: 1800.", "default": 1800, "min": 10, "max": 86400, "required": true }
+  },
+  "guide": [
+    { "id": "stage_1", "title": "Kö under avbrott", "description": "Gäller bryggan från edge clienten till IoT Open. Mosquitto startas om när inställningarna ändras, vilket kopplar ned bryggan och lokala klienter några sekunder.", "input_fields": ["max_queued_messages", "max_queued_mb", "queue_qos0_messages"] },
+    { "id": "stage_2", "title": "Lagring", "description": "Hur ofta kön sparas på disk.", "input_fields": ["autosave_interval"] }
+  ]
+}

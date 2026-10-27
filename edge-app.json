@@ -1,0 +1,6 @@
+{
+  "name": "Brokerinställningar",
+  "category": "system",
+  "short_description": "Ställer in hur mycket edge clientens Mosquitto köar till IoT Open under ett avbrott, och hur ofta kön sparas.",
+  "tags": ["mosquitto", "mqtt", "bridge", "offline"]
+}
