@@ -53,6 +53,7 @@ local function load_app(opts)
     require = function(m) if m == "cqueues.socket" then return socket end return require(m) end,
     cfg = opts.cfg or {},
     app = { id = 7 },
+    BROKER_SETTINGS_TEST = true,
     json = { null = {} },
     log = {
       i = function(f, ...) fake.logs[#fake.logs + 1] = "I " .. string.format(f, ...) end,
@@ -158,5 +159,13 @@ check("without systemd or supervisord nothing changes", function()
   eq(fake.restarts, 0, "restarts")
 end)
 
+check("the code returns nothing in the edge client", function()
+  -- iotopen-rt reports anything the app's code returns as "error running app code"
+  local env = setmetatable({ cfg = {}, app = { id = 1 }, log = { i = print, e = print }, json = { null = {} } }, { __index = _G })
+  local chunk = assert(loadfile("app.lua", "t", env))
+  eq(select("#", chunk()), 0, "returned values")
+end)
+
 print(string.format("%d of %d passed", count - failures, count))
 os.exit(failures == 0 and 0 or 1)
+
