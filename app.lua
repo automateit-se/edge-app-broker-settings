@@ -4,6 +4,8 @@
 -- Mosquitto's max_queued_messages (default 1000), max_queued_bytes (default no limit) and queue_qos0_messages;
 -- how often the queue is saved to disk by autosave_interval (default 1800 s). This app writes them to one file
 -- of its own, /etc/mosquitto/conf.d/zz-edge-broker-settings.conf, and restarts Mosquitto when it changed.
+-- Mosquitto reads conf.d alphabetically and takes the last value of a number or on/off option, so "zz-" makes these
+-- values win over the same options in IoT Open's iotopen.conf (the Docker edge client sets autosave_interval 3600).
 --
 -- Safety, since edge apps run as root:
 --   - the only file written or removed is FILE; the configuration comes from validated integers and a boolean

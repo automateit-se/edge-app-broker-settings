@@ -40,12 +40,16 @@ of memory. The options apply to every persistent client of the broker, not only 
 
 - The app writes the settings that differ from Mosquitto's defaults to one file of its own,
   `/etc/mosquitto/conf.d/zz-edge-broker-settings.conf`. IoT Open's own `iotopen.conf` is never touched.
+- **Its values win.** Mosquitto reads the files in `conf.d` in alphabetical order, and for these four options the
+  last value read counts; `zz-` puts the app's file last. This matters in IoT Open's Docker edge client, whose
+  `iotopen.conf` already sets `autosave_interval 3600`: the app's value replaces it. (Checked with Mosquitto 2.0:
+  a duplicate number or on/off option is taken, while a duplicate text option such as `persistence_location` is
+  refused. The app only writes numbers and on/off values.)
 - Only when the file changed, Mosquitto is restarted: with `systemctl` on an edge client installed in Linux, with
   `supervisorctl` in IoT Open's Docker edge client. The bridge and local clients are disconnected for a few seconds
   and reconnect by themselves.
 - After the restart the broker must answer on `127.0.0.1:1883` within 15 seconds. If it does not, the previous file
-  is put back and Mosquitto is restarted again, so a setting can never leave the edge client without a broker (for
-  example when the same option is also set in another file, which Mosquitto refuses).
+  is put back and Mosquitto is restarted again, so a setting can never leave the edge client without a broker.
 - The file is written again at every start of the app. In the Docker edge client `/etc/mosquitto` is not kept when
   the container is recreated, so the settings come back by themselves after an update.
 - **Back to Mosquitto's defaults:** set every value to its default. The file is then removed and Mosquitto
